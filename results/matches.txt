@@ -1,9 +1,0 @@
-type,detector,img_i,img_j,num_matches,mean_dist,time_ms
-detect,ORB,,,,,173.762
-detect,AKAZE,,,,,381.14
-match,ORB,1,2,10409,43.0466,1089.91
-match,ORB,1,3,5167,49.5374,437.067
-match,ORB,2,3,6855,47.3306,741.195
-match,AKAZE,1,2,2581,76.8396,55.3065
-match,AKAZE,1,3,1350,98.9215,36.035
-match,AKAZE,2,3,1720,91.1855,48.9009
