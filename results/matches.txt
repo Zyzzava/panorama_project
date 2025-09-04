@@ -1,8 +1,9 @@
-detect+compute time_ms=163.528
-detect+compute time_ms=379.79
-ORB pair=1-2 matches=10409 mean_dist=43.0466
-ORB pair=1-3 matches=5167 mean_dist=49.5374
-ORB pair=2-3 matches=6855 mean_dist=47.3306
-AKAZE pair=1-2 matches=2581 mean_dist=76.8396
-AKAZE pair=1-3 matches=1350 mean_dist=98.9215
-AKAZE pair=2-3 matches=1720 mean_dist=91.1855
+type,detector,img_i,img_j,num_matches,mean_dist,time_ms
+detect,ORB,,,,,173.762
+detect,AKAZE,,,,,381.14
+match,ORB,1,2,10409,43.0466,1089.91
+match,ORB,1,3,5167,49.5374,437.067
+match,ORB,2,3,6855,47.3306,741.195
+match,AKAZE,1,2,2581,76.8396,55.3065
+match,AKAZE,1,3,1350,98.9215,36.035
+match,AKAZE,2,3,1720,91.1855,48.9009

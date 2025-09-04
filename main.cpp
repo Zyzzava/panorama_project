@@ -33,7 +33,7 @@ static void matchAndReport(const FeatSet &fs, std::ofstream &outputFile)
 {
     if (fs.descs.size() < 2)
         return;
-    cv::BFMatcher matcher(cv::NORM_HAMMING, true); // Hamming distance, crossCheck=true
+    cv::BFMatcher matcher(cv::NORM_HAMMING, true);
     for (size_t i = 0; i < fs.descs.size(); ++i)
         for (size_t j = i + 1; j < fs.descs.size(); ++j)
         {
@@ -49,11 +49,12 @@ static void matchAndReport(const FeatSet &fs, std::ofstream &outputFile)
                 meanDist += m.distance;
             if (!matches.empty())
                 meanDist /= matches.size();
-            outputFile << fs.name
-                       << " pair=" << (i + 1) << "-" << (j + 1)
-                       << " matches=" << matches.size()
-                       << " mean_dist=" << meanDist
-                       << std::endl;
+            double matchTimeMs = tm.getTimeMilli();
+            outputFile << "match," << fs.name << ","
+                       << (i + 1) << "," << (j + 1) << ","
+                       << matches.size() << ","
+                       << meanDist << ","
+                       << matchTimeMs << "\n";
         }
 }
 
@@ -88,11 +89,15 @@ int main()
         return 1;
     }
 
+    // CSV header
+    outputFile << "type,detector,img_i,img_j,num_matches,mean_dist,time_ms\n";
+
     for (auto &d : detectors)
     {
         auto fs = runDetector(d.first, d.second, images);
+        // write detect row
+        outputFile << "detect," << fs.name << ",,,,," << fs.tDetectMs << "\n"; // these are empty placeholders for image/match fields
         results.push_back(std::move(fs));
-        outputFile << fs.name << "detect+compute time_ms=" << fs.tDetectMs << std::endl;
     }
 
     for (auto &fs : results)
