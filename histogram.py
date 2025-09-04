@@ -6,7 +6,7 @@ def read_matches(file_path):
         for line in file:
             parts = line.split()
             if len(parts) > 0:
-                distances.append(float(parts[-1]))  # Assuming the distance is the last element in each line
+                distances.append(float(parts[-1]))
     return distances
 
 def plot_histogram(distances, bins=32):
