@@ -1,0 +1,17 @@
+{
+     "version": "0.2.0",
+     "configurations": [
+        {
+        "name": "Debug (LLDB)",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${workspaceFolder}/build/OpenCV_Project",
+        "args": [],
+        "stopAtEntry": false,
+        "cwd": "${workspaceFolder}/build",
+        "environment": [],
+        "externalConsole": false,
+        "MIMode": "lldb"
+        }
+    ]
+}

@@ -1,0 +1,60 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.10"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "PanoramaProject",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "PanoramaProject::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-PanoramaProject-Debug-87d89067f5b269fd7f34.json",
+					"name" : "PanoramaProject",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/Users/madspagh/Library/CloudStorage/OneDrive-Aarhusuniversitet/7. Semester/Visual Computing/panorama_project/build",
+		"source" : "/Users/madspagh/Library/CloudStorage/OneDrive-Aarhusuniversitet/7. Semester/Visual Computing/panorama_project"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 8
+	}
+}

@@ -1,0 +1,37 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "C/C++: clang++ build active file with OpenCV",
+            "command": "/usr/bin/clang++",
+            "args": [
+                "-std=c++14",
+                "-fcolor-diagnostics",
+                "-fansi-escape-codes",
+                "-g",
+                "${file}",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}",
+                "-I", "/opt/homebrew/opt/opencv/include/opencv4",
+                "-L", "/opt/homebrew/opt/opencv/lib",
+                "-lopencv_core",
+                "-lopencv_imgcodecs",
+                "-lopencv_highgui",
+                "-lopencv_imgproc",
+                "-lopencv_features2d"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "Build with OpenCV (clang++)"
+        }
+    ]
+}
