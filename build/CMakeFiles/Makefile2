@@ -85,12 +85,12 @@ clean: CMakeFiles/PanoramaProject.dir/clean
 CMakeFiles/PanoramaProject.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/PanoramaProject.dir/build.make CMakeFiles/PanoramaProject.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/PanoramaProject.dir/build.make CMakeFiles/PanoramaProject.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/Users/madspagh/Library/CloudStorage/OneDrive-Aarhusuniversitet/7. Semester/Visual Computing/panorama_project/build/CMakeFiles" --progress-num=1,2 "Built target PanoramaProject"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/Users/madspagh/Library/CloudStorage/OneDrive-Aarhusuniversitet/7. Semester/Visual Computing/panorama_project/build/CMakeFiles" --progress-num=1,2,3 "Built target PanoramaProject"
 .PHONY : CMakeFiles/PanoramaProject.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/PanoramaProject.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/madspagh/Library/CloudStorage/OneDrive-Aarhusuniversitet/7. Semester/Visual Computing/panorama_project/build/CMakeFiles" 2
+	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/madspagh/Library/CloudStorage/OneDrive-Aarhusuniversitet/7. Semester/Visual Computing/panorama_project/build/CMakeFiles" 3
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/PanoramaProject.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/madspagh/Library/CloudStorage/OneDrive-Aarhusuniversitet/7. Semester/Visual Computing/panorama_project/build/CMakeFiles" 0
 .PHONY : CMakeFiles/PanoramaProject.dir/rule
@@ -102,7 +102,7 @@ PanoramaProject: CMakeFiles/PanoramaProject.dir/rule
 # codegen rule for target.
 CMakeFiles/PanoramaProject.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/PanoramaProject.dir/build.make CMakeFiles/PanoramaProject.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/Users/madspagh/Library/CloudStorage/OneDrive-Aarhusuniversitet/7. Semester/Visual Computing/panorama_project/build/CMakeFiles" --progress-num=1,2 "Finished codegen for target PanoramaProject"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/Users/madspagh/Library/CloudStorage/OneDrive-Aarhusuniversitet/7. Semester/Visual Computing/panorama_project/build/CMakeFiles" --progress-num=1,2,3 "Finished codegen for target PanoramaProject"
 .PHONY : CMakeFiles/PanoramaProject.dir/codegen
 
 # clean rule for target.

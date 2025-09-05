@@ -13,6 +13,9 @@ find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
 # Define the executable target and its source files.
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(PanoramaProject
+    main.cpp
+    FeatureProcessing.cpp
+)
 # Link the executable against the required OpenCV libraries.
-target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
+target_include_directories(PanoramaProject PRIVATE include)

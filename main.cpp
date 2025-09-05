@@ -2,112 +2,31 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/features2d.hpp>
 #include <fstream>
-#include <filesystem>
-#include <sstream>
 #include <vector>
 #include <string>
+#include "FeatureProcessing.hpp"
 
-struct FeatSet
+struct Summary
 {
-    std::string name;
-    std::vector<std::vector<cv::KeyPoint>> kps;
-    std::vector<cv::Mat> descs;
-    std::vector<double> perImageDetectMs;
+    std::string dataset;
+    std::string detector;
+    size_t totalKps = 0;
+    double avgKps = 0.0;
     double totalDetectMs = 0.0;
+    double perImageDetectAvgMs = 0.0;
 };
-
-static FeatSet runDetector(const std::string &name,
-                           const cv::Ptr<cv::Feature2D> &det,
-                           const std::vector<cv::Mat> &images)
-{
-    FeatSet fs;
-    fs.name = name;
-    fs.kps.resize(images.size());
-    fs.descs.resize(images.size());
-    fs.perImageDetectMs.resize(images.size(), 0.0);
-
-    cv::TickMeter total;
-    total.start();
-    for (size_t i = 0; i < images.size(); ++i)
-    {
-        cv::TickMeter tm;
-        tm.start();
-        det->detectAndCompute(images[i], cv::noArray(), fs.kps[i], fs.descs[i]);
-        tm.stop();
-        fs.perImageDetectMs[i] = tm.getTimeMilli();
-    }
-    total.stop();
-    fs.totalDetectMs = total.getTimeMilli();
-    return fs;
-}
-
-static void matchAndReport(const FeatSet &fs, std::ofstream &outputFile)
-{
-    if (fs.descs.size() < 2)
-        return;
-    cv::BFMatcher matcher(cv::NORM_HAMMING, true); // crossCheck=true
-    for (size_t i = 0; i < fs.descs.size(); ++i)
-    {
-        for (size_t j = i + 1; j < fs.descs.size(); ++j)
-        {
-            if (fs.descs[i].empty() || fs.descs[j].empty())
-                continue;
-
-            std::vector<cv::DMatch> matches;
-            cv::TickMeter tm;
-            tm.start();
-            matcher.match(fs.descs[i], fs.descs[j], matches);
-            tm.stop();
-
-            double meanDist = 0.0;
-            for (auto &m : matches)
-                meanDist += m.distance;
-            if (!matches.empty())
-                meanDist /= matches.size();
-
-            double matchTimeMs = tm.getTimeMilli();
-
-            std::ostringstream distStream;
-            for (size_t k = 0; k < matches.size(); ++k)
-            {
-                if (k)
-                    distStream << ';';
-                distStream << matches[k].distance;
-            }
-
-            // CSV: type,detector,img_i,img_j,num_matches,mean_dist,time_ms,distances
-            outputFile << "match," << fs.name << ","
-                       << (i + 1) << "," << (j + 1) << ","
-                       << matches.size() << ","
-                       << meanDist << ","
-                       << matchTimeMs << ","
-                       << distStream.str() << "\n";
-        }
-    }
-}
 
 int main()
 {
-    // Results exists, can't get cpp to make it ...:/
-
     std::vector<std::string> datasetFolders = {
         "images/pan1",
         "images/pan2",
         "images/pan3"};
 
     std::vector<std::pair<std::string, cv::Ptr<cv::Feature2D>>> detectors = {
-        {"ORB", cv::ORB::create(1000)},
+        {"ORB", cv::ORB::create(100000)},
         {"AKAZE", cv::AKAZE::create()}};
 
-    struct Summary
-    {
-        std::string dataset;
-        std::string detector;
-        size_t totalKps = 0;
-        double avgKps = 0.0;
-        double totalDetectMs = 0.0;
-        double perImageDetectAvgMs = 0.0;
-    };
     std::vector<Summary> summaries;
 
     for (size_t dsi = 0; dsi < datasetFolders.size(); ++dsi)
@@ -117,7 +36,8 @@ int main()
         std::vector<cv::String> found;
         cv::glob(folder + "/*.png", found, false);
         if (found.size() < 3)
-            std::cerr << "Warning: folder " << folder << " has " << found.size() << " png images (>=3 expected)\n";
+            std::cerr << "Warning: folder " << folder << " has "
+                      << found.size() << " png images (>=3 expected)\n";
 
         std::vector<cv::Mat> images;
         images.reserve(found.size());
@@ -146,8 +66,6 @@ int main()
             std::cerr << "Failed to open " << outPath << " for writing\n";
             continue;
         }
-
-        // Header so that histogram.py understands
         outputFile << "type,detector,img_i,img_j,num_matches,mean_dist,time_ms,distances\n";
 
         for (auto &detPair : detectors)
@@ -162,18 +80,49 @@ int main()
                 totalKps += vec.size();
             double avgKps = fs.kps.empty() ? 0.0 : static_cast<double>(totalKps) / fs.kps.size();
 
-            // Detection rows: mean_dist empty, time_ms = per-image detect time, distances tag
             for (size_t i = 0; i < fs.kps.size(); ++i)
             {
                 outputFile << "detect," << detName << "," << (i + 1) << ",,"
-                           << fs.kps[i].size() << "," // num_matches = keypoint count
-                           << "" << ","               // mean_dist empty
+                           << fs.kps[i].size() << ","
+                           << "" << ","
                            << fs.perImageDetectMs[i] << ","
                            << "kps_per_image\n";
             }
 
-            // Matching rows
             matchAndReport(fs, outputFile);
+
+            // --- Simple visualization of matches for first 3 images ---
+            if (fs.descs.size() >= 3)
+            {
+                auto showPair = [&](int a, int b)
+                {
+                    if (fs.descs[a].empty() || fs.descs[b].empty())
+                        return;
+                    int normType = (fs.descs[a].type() == CV_8U) ? cv::NORM_HAMMING : cv::NORM_L2;
+                    cv::BFMatcher matcher(normType, true);
+                    std::vector<cv::DMatch> matches;
+                    matcher.match(fs.descs[a], fs.descs[b], matches);
+                    if (matches.empty())
+                        return;
+                    std::sort(matches.begin(), matches.end(),
+                              [](const cv::DMatch &m1, const cv::DMatch &m2)
+                              { return m1.distance < m2.distance; });
+                    if (matches.size() > 50)
+                        matches.resize(50);
+                    cv::Mat vis;
+                    cv::drawMatches(images[a], fs.kps[a],
+                                    images[b], fs.kps[b],
+                                    matches, vis);
+                    std::string win = "DS" + std::to_string(dsi + 1) + " " + detName +
+                                      " " + std::to_string(a + 1) + "-" + std::to_string(b + 1);
+                    cv::imshow(win, vis);
+                };
+                showPair(0, 1);
+                showPair(1, 2);
+                cv::waitKey(0); // wait for key press before continuing
+                cv::destroyAllWindows();
+            }
+            // --- end visualization ---
 
             double perImgAvgMs = fs.kps.empty() ? 0.0 : fs.totalDetectMs / fs.kps.size();
             summaries.push_back({folder, detName, totalKps, avgKps, fs.totalDetectMs, perImgAvgMs});

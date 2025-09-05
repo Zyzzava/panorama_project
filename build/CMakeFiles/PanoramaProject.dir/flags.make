@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/clang++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -isystem /opt/homebrew/Cellar/opencv/4.12.0_8/include/opencv4
+CXX_INCLUDES = -I/opt/homebrew/Cellar/opencv/4.12.0_8/include/opencv4 -I"/Users/madspagh/Library/CloudStorage/OneDrive-Aarhusuniversitet/7. Semester/Visual Computing/panorama_project/include"
 
 CXX_FLAGSarm64 = -g -arch arm64
 

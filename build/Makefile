@@ -129,6 +129,30 @@ PanoramaProject/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/PanoramaProject.dir/build.make CMakeFiles/PanoramaProject.dir/build
 .PHONY : PanoramaProject/fast
 
+FeatureProcessing.o: FeatureProcessing.cpp.o
+.PHONY : FeatureProcessing.o
+
+# target to build an object file
+FeatureProcessing.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PanoramaProject.dir/build.make CMakeFiles/PanoramaProject.dir/FeatureProcessing.cpp.o
+.PHONY : FeatureProcessing.cpp.o
+
+FeatureProcessing.i: FeatureProcessing.cpp.i
+.PHONY : FeatureProcessing.i
+
+# target to preprocess a source file
+FeatureProcessing.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PanoramaProject.dir/build.make CMakeFiles/PanoramaProject.dir/FeatureProcessing.cpp.i
+.PHONY : FeatureProcessing.cpp.i
+
+FeatureProcessing.s: FeatureProcessing.cpp.s
+.PHONY : FeatureProcessing.s
+
+# target to generate assembly for a file
+FeatureProcessing.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PanoramaProject.dir/build.make CMakeFiles/PanoramaProject.dir/FeatureProcessing.cpp.s
+.PHONY : FeatureProcessing.cpp.s
+
 main.o: main.cpp.o
 .PHONY : main.o
 
@@ -162,6 +186,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... PanoramaProject"
+	@echo "... FeatureProcessing.o"
+	@echo "... FeatureProcessing.i"
+	@echo "... FeatureProcessing.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
