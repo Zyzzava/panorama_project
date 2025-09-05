@@ -90,7 +90,9 @@ int main()
             }
 
             matchAndReport(fs, outputFile);
+            homographyExperiments(fs, images, outputFile, detName);
 
+            /*
             // --- Simple visualization of matches for first 3 images ---
             if (fs.descs.size() >= 3)
             {
@@ -123,6 +125,7 @@ int main()
                 cv::destroyAllWindows();
             }
             // --- end visualization ---
+            */
 
             double perImgAvgMs = fs.kps.empty() ? 0.0 : fs.totalDetectMs / fs.kps.size();
             summaries.push_back({folder, detName, totalKps, avgKps, fs.totalDetectMs, perImgAvgMs});
