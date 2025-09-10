@@ -32,41 +32,26 @@ int main()
     for (size_t dsi = 0; dsi < datasetFolders.size(); ++dsi)
     {
         const std::string &folder = datasetFolders[dsi];
-
         std::vector<cv::String> found;
         cv::glob(folder + "/*.png", found, false);
-        if (found.size() < 3)
-            std::cerr << "Warning: folder " << folder << " has "
-                      << found.size() << " png images (>=3 expected)\n";
 
         std::vector<cv::Mat> images;
         images.reserve(found.size());
         for (auto &p : found)
         {
-            cv::Mat g = cv::imread(p, cv::IMREAD_GRAYSCALE);
-            if (g.empty())
-            {
-                std::cerr << "Failed to load: " << p << "\n";
-                return 1;
-            }
+            cv::Mat g = cv::imread(p, cv::IMREAD_COLOR);
             images.push_back(g);
-        }
-        if (images.empty())
-        {
-            std::cerr << "No images loaded for folder " << folder << "\n";
-            continue;
         }
 
         std::cout << "=== Dataset " << (dsi + 1) << " (" << folder << ") ===\n";
 
         std::string outPath = "results/results" + std::to_string(dsi + 1) + ".txt";
         std::ofstream outputFile(outPath);
-        if (!outputFile.is_open())
-        {
-            std::cerr << "Failed to open " << outPath << " for writing\n";
-            continue;
-        }
         outputFile << "type,detector,img_i,img_j,num_matches,mean_dist,time_ms,distances\n";
+
+        std::string homographyPath = "results/homography_results" + std::to_string(dsi + 1) + ".txt";
+        std::ofstream homographyFile(homographyPath);
+        homographyFile << "type,detector,img_i,img_j,num_inliers,time_ms,threshold\n";
 
         for (auto &detPair : detectors)
         {
@@ -90,7 +75,27 @@ int main()
             }
 
             matchAndReport(fs, outputFile);
-            homographyExperiments(fs, images, outputFile, detName);
+
+            homographyExperiments(fs, images, homographyFile, detName);
+
+            std::vector<double> ransacThresholds = {1.0, 5.0, 15.0};
+            for (double thr : ransacThresholds)
+            {
+                cv::Mat H_12 = computeHomographyOneWay(fs.kps[0], fs.kps[1], fs.descs[0], fs.descs[1], thr);
+                cv::Mat H_23 = computeHomographyOneWay(fs.kps[1], fs.kps[2], fs.descs[1], fs.descs[2], thr);
+
+                cv::Mat pano_over = stitchTriple(images, H_12, H_23, false);
+                cv::Mat pano_feather = stitchTriple(images, H_12, H_23, true);
+
+                if (!pano_over.empty())
+                    cv::imwrite("results/panorama_ds" + std::to_string(dsi + 1) +
+                                    "_" + detName + "_thr" + std::to_string(thr) + "_over.png",
+                                pano_over);
+                if (!pano_feather.empty())
+                    cv::imwrite("results/panorama_ds" + std::to_string(dsi + 1) +
+                                    "_" + detName + "_thr" + std::to_string(thr) + "_feather.png",
+                                pano_feather);
+            }
 
             /*
             // --- Simple visualization of matches for first 3 images ---

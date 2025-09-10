@@ -18,15 +18,12 @@ class DetectResult:
     total_kp: int
     detect_time_ms: float
 
-@dataclass(frozen=True)
-class MatchSummary:
-    dataset: str
-    detector: str
-    pairs: int
-    avg_mean_dist: float
-    median_mean_dist: float
-    std_mean_dist: float
-    total_matches: int
-    avg_matches_per_pair: float
-    avg_match_time_ms: float
-    total_match_time_ms: float
+@dataclass
+class HomographyResult:
+    dataset: str          # e.g. "1", "2", "3"
+    detector: str         # ORB / AKAZE
+    img_i: int
+    img_j: int
+    threshold: float      # numeric threshold (e.g. 1,5,15)
+    num_inliers: int
+    time_ms: float
