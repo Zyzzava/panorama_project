@@ -98,14 +98,13 @@ int main()
                 cv::Mat pano_over = stitchTriple(images, H_12, H_23, false);
                 cv::Mat pano_feather = stitchTriple(images, H_12, H_23, true);
 
-                if (!pano_over.empty())
-                    cv::imwrite("results/panorama_ds" + std::to_string(dsi + 1) +
-                                    "_" + detName + "_thr" + std::to_string(thr) + "_over.png",
-                                pano_over);
-                if (!pano_feather.empty())
-                    cv::imwrite("results/panorama_ds" + std::to_string(dsi + 1) +
-                                    "_" + detName + "_thr" + std::to_string(thr) + "_feather.png",
-                                pano_feather);
+                cv::imwrite("results/panorama_ds" + std::to_string(dsi + 1) +
+                                "_" + detName + "_thr" + std::to_string(thr) + "_over.png",
+                            pano_over);
+
+                cv::imwrite("results/panorama_ds" + std::to_string(dsi + 1) +
+                                "_" + detName + "_thr" + std::to_string(thr) + "_feather.png",
+                            pano_feather);
             }
             double perImgAvgMs = fs.kps.empty() ? 0.0 : fs.totalDetectMs / fs.kps.size();
             summaries.push_back({folder, detName, totalKps, avgKps, fs.totalDetectMs, perImgAvgMs});

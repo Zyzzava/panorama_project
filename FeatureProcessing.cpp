@@ -55,7 +55,7 @@ cv::Mat stitchTriple(const std::vector<cv::Mat> &imgs,
     const cv::Mat H2 = I;          // img2 -> img2
     const cv::Mat H3 = H_23.inv(); // img3 -> img2
 
-    // Compute bounds in reference frame
+    // finding the bounds in the panorama
     std::vector<cv::Point2f> c1, c2, c3, all;
     projectCorners(imgs[0], H1, c1);
     projectCorners(imgs[1], H2, c2);
@@ -90,7 +90,7 @@ cv::Mat stitchTriple(const std::vector<cv::Mat> &imgs,
     int Ws = std::max(1, (int)std::ceil(W * s));
     int Hs = std::max(1, (int)std::ceil(Hh * s));
 
-    // Blender: NO = simple overlay, FEATHER = soft blend
+    // Bleding,  NO means simple overlay, FEATHER = soft blend
     int mode = feather ? cv::detail::Blender::FEATHER : cv::detail::Blender::NO;
     cv::Ptr<cv::detail::Blender> blender = cv::detail::Blender::createDefault(mode, false);
     if (feather)
@@ -136,13 +136,6 @@ cv::Mat stitchTriple(const std::vector<cv::Mat> &imgs,
 
     cv::Mat result_s, result_mask;
     blender->blend(result_s, result_mask);
-
-    // Crop to non-empty region, remove the black borders
-    if (!result_mask.empty() && cv::countNonZero(result_mask) > 0)
-    {
-        cv::Rect roi = cv::boundingRect(result_mask);
-        result_s = result_s(roi).clone();
-    }
 
     cv::Mat result;
     result_s.convertTo(result, imgs[0].type());
