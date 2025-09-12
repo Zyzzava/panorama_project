@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include "FeatureProcessing.hpp"
+#include "Report.hpp"
 
 struct Summary
 {
@@ -75,7 +76,6 @@ int main()
             }
 
             matchAndReport(fs, outputFile);
-
             homographyExperiments(fs, images, homographyFile, detName);
 
             std::vector<double> ransacThresholds = {1.0, 5.0, 15.0};
@@ -96,42 +96,6 @@ int main()
                                     "_" + detName + "_thr" + std::to_string(thr) + "_feather.png",
                                 pano_feather);
             }
-
-            /*
-            // --- Simple visualization of matches for first 3 images ---
-            if (fs.descs.size() >= 3)
-            {
-                auto showPair = [&](int a, int b)
-                {
-                    if (fs.descs[a].empty() || fs.descs[b].empty())
-                        return;
-                    int normType = (fs.descs[a].type() == CV_8U) ? cv::NORM_HAMMING : cv::NORM_L2;
-                    cv::BFMatcher matcher(normType, true);
-                    std::vector<cv::DMatch> matches;
-                    matcher.match(fs.descs[a], fs.descs[b], matches);
-                    if (matches.empty())
-                        return;
-                    std::sort(matches.begin(), matches.end(),
-                              [](const cv::DMatch &m1, const cv::DMatch &m2)
-                              { return m1.distance < m2.distance; });
-                    if (matches.size() > 50)
-                        matches.resize(50);
-                    cv::Mat vis;
-                    cv::drawMatches(images[a], fs.kps[a],
-                                    images[b], fs.kps[b],
-                                    matches, vis);
-                    std::string win = "DS" + std::to_string(dsi + 1) + " " + detName +
-                                      " " + std::to_string(a + 1) + "-" + std::to_string(b + 1);
-                    cv::imshow(win, vis);
-                };
-                showPair(0, 1);
-                showPair(1, 2);
-                cv::waitKey(0); // wait for key press before continuing
-                cv::destroyAllWindows();
-            }
-            // --- end visualization ---
-            */
-
             double perImgAvgMs = fs.kps.empty() ? 0.0 : fs.totalDetectMs / fs.kps.size();
             summaries.push_back({folder, detName, totalKps, avgKps, fs.totalDetectMs, perImgAvgMs});
 

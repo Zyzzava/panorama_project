@@ -153,6 +153,30 @@ FeatureProcessing.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/PanoramaProject.dir/build.make CMakeFiles/PanoramaProject.dir/FeatureProcessing.cpp.s
 .PHONY : FeatureProcessing.cpp.s
 
+Report.o: Report.cpp.o
+.PHONY : Report.o
+
+# target to build an object file
+Report.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PanoramaProject.dir/build.make CMakeFiles/PanoramaProject.dir/Report.cpp.o
+.PHONY : Report.cpp.o
+
+Report.i: Report.cpp.i
+.PHONY : Report.i
+
+# target to preprocess a source file
+Report.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PanoramaProject.dir/build.make CMakeFiles/PanoramaProject.dir/Report.cpp.i
+.PHONY : Report.cpp.i
+
+Report.s: Report.cpp.s
+.PHONY : Report.s
+
+# target to generate assembly for a file
+Report.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PanoramaProject.dir/build.make CMakeFiles/PanoramaProject.dir/Report.cpp.s
+.PHONY : Report.cpp.s
+
 main.o: main.cpp.o
 .PHONY : main.o
 
@@ -189,6 +213,9 @@ help:
 	@echo "... FeatureProcessing.o"
 	@echo "... FeatureProcessing.i"
 	@echo "... FeatureProcessing.s"
+	@echo "... Report.o"
+	@echo "... Report.i"
+	@echo "... Report.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

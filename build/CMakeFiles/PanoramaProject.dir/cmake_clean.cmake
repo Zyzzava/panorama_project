@@ -1,6 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/PanoramaProject.dir/FeatureProcessing.cpp.o"
   "CMakeFiles/PanoramaProject.dir/FeatureProcessing.cpp.o.d"
+  "CMakeFiles/PanoramaProject.dir/Report.cpp.o"
+  "CMakeFiles/PanoramaProject.dir/Report.cpp.o.d"
   "CMakeFiles/PanoramaProject.dir/main.cpp.o"
   "CMakeFiles/PanoramaProject.dir/main.cpp.o.d"
   "PanoramaProject"

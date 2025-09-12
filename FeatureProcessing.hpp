@@ -19,15 +19,6 @@ FeatSet runDetector(const std::string &name,
                     const cv::Ptr<cv::Feature2D> &det,
                     const std::vector<cv::Mat> &images);
 
-// Match all image pairs and append CSV rows
-void matchAndReport(const FeatSet &fs, std::ofstream &outputFile);
-
-// Homography-based experiments and append CSV rows
-void homographyExperiments(const FeatSet &fs,
-                           const std::vector<cv::Mat> &images,
-                           std::ofstream &outputFile,
-                           const std::string &detName);
-
 cv::Mat computeHomographyOneWay(const std::vector<cv::KeyPoint> &kpsA,
                                 const std::vector<cv::KeyPoint> &kpsB,
                                 const cv::Mat &descA,

@@ -16,6 +16,7 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 add_executable(PanoramaProject
     main.cpp
     FeatureProcessing.cpp
+    Report.cpp
 )
 # Link the executable against the required OpenCV libraries.
 target_include_directories(PanoramaProject PRIVATE include)
