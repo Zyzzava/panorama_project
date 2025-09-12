@@ -6,11 +6,22 @@
 #include <opencv2/core.hpp>
 #include "FeatureProcessing.hpp"
 
-// Reports basic matching stats between adjacent images
-void matchAndReport(const FeatSet &fs, std::ofstream &outputFile);
+// Used to store homography results
+struct HomogEntry
+{
+    size_t i; // 0-based img index
+    size_t j; // 0-based img index
+    double thr;
+    cv::Mat H;
+    int inliers;
+    double timeMs;
+};
 
-// Runs homography estimation experiments and reports inliers/time
-void homographyExperiments(const FeatSet &fs,
-                           const std::vector<cv::Mat> &images,
-                           std::ofstream &outputFile,
-                           const std::string &detName);
+/*
+Run the matching and homography experiments and write results to outputFile.
+*/
+void matchAndHomographyReport(const FeatSet &fs,
+                              std::ofstream &kps_Match_File,
+                              std::ofstream &homography_File,
+                              const std::string &detName,
+                              std::vector<HomogEntry> *outHomogs = nullptr);

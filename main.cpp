@@ -46,9 +46,9 @@ int main()
 
         std::cout << "=== Dataset " << (dsi + 1) << " (" << folder << ") ===\n";
 
-        std::string outPath = "results/results" + std::to_string(dsi + 1) + ".txt";
-        std::ofstream outputFile(outPath);
-        outputFile << "type,detector,img_i,img_j,num_matches,mean_dist,time_ms,distances\n";
+        std::string kps_match = "results/kps_match_results" + std::to_string(dsi + 1) + ".txt";
+        std::ofstream kps_match_File(kps_match);
+        kps_match_File << "type,detector,img_i,img_j,num_matches,mean_dist,time_ms,distances\n";
 
         std::string homographyPath = "results/homography_results" + std::to_string(dsi + 1) + ".txt";
         std::ofstream homographyFile(homographyPath);
@@ -64,25 +64,36 @@ int main()
             size_t totalKps = 0;
             for (auto &vec : fs.kps)
                 totalKps += vec.size();
-            double avgKps = fs.kps.empty() ? 0.0 : static_cast<double>(totalKps) / fs.kps.size();
+            double avgKps = totalKps / fs.kps.size();
 
             for (size_t i = 0; i < fs.kps.size(); ++i)
             {
-                outputFile << "detect," << detName << "," << (i + 1) << ",,"
-                           << fs.kps[i].size() << ","
-                           << "" << ","
-                           << fs.perImageDetectMs[i] << ","
-                           << "kps_per_image\n";
+                kps_match_File << "detect," << detName << "," << (i + 1) << ",,"
+                               << fs.kps[i].size() << ","
+                               << "" << ","
+                               << fs.perImageDetectMs[i] << ","
+                               << "kps_per_image\n";
             }
 
-            matchAndReport(fs, outputFile);
-            homographyExperiments(fs, images, homographyFile, detName);
+            // Collect homographies while reporting (before I did rematching, waste of computing)
+            std::vector<HomogEntry> homogs;
+            matchAndHomographyReport(fs, kps_match_File, homographyFile, detName, &homogs);
+
+            auto getH = [&](size_t a, size_t b, double thr) -> cv::Mat
+            {
+                for (const auto &e : homogs)
+                    if (e.i == a && e.j == b && e.thr == thr)
+                        return e.H;
+                return cv::Mat();
+            };
 
             std::vector<double> ransacThresholds = {1.0, 5.0, 15.0};
             for (double thr : ransacThresholds)
             {
-                cv::Mat H_12 = computeHomographyOneWay(fs.kps[0], fs.kps[1], fs.descs[0], fs.descs[1], thr);
-                cv::Mat H_23 = computeHomographyOneWay(fs.kps[1], fs.kps[2], fs.descs[1], fs.descs[2], thr);
+                cv::Mat H_12 = getH(0, 1, thr);
+                cv::Mat H_23 = getH(1, 2, thr);
+                if (H_12.empty() || H_23.empty())
+                    continue;
 
                 cv::Mat pano_over = stitchTriple(images, H_12, H_23, false);
                 cv::Mat pano_feather = stitchTriple(images, H_12, H_23, true);

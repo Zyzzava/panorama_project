@@ -34,33 +34,6 @@ FeatSet runDetector(const std::string &name,
     return fs;
 }
 
-cv::Mat computeHomographyOneWay(const std::vector<cv::KeyPoint> &kpsA,
-                                const std::vector<cv::KeyPoint> &kpsB,
-                                const cv::Mat &descA,
-                                const cv::Mat &descB,
-                                double ransacThresh)
-{
-    if (descA.empty() || descB.empty())
-        return cv::Mat();
-    cv::BFMatcher matcher(cv::NORM_HAMMING, true);
-    std::vector<cv::DMatch> matches;
-    matcher.match(descA, descB, matches);
-    std::vector<cv::Point2f> ptsA, ptsB;
-
-    ptsA.reserve(matches.size());
-    ptsB.reserve(matches.size());
-
-    for (auto &m : matches)
-    {
-        ptsA.push_back(kpsA[m.queryIdx].pt);
-        ptsB.push_back(kpsB[m.trainIdx].pt);
-    }
-
-    std::vector<unsigned char> mask;
-    cv::Mat H = cv::findHomography(ptsA, ptsB, cv::RANSAC, ransacThresh, mask);
-    return H;
-}
-
 static void projectCorners(const cv::Mat &img, const cv::Mat &H, std::vector<cv::Point2f> &out)
 {
     std::vector<cv::Point2f> c = {
