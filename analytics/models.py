@@ -20,10 +20,10 @@ class DetectResult:
 
 @dataclass
 class HomographyResult:
-    dataset: str          # e.g. "1", "2", "3"
-    detector: str         # ORB / AKAZE
+    dataset: str         
+    detector: str        
     img_i: int
     img_j: int
-    threshold: float      # numeric threshold (e.g. 1,5,15)
+    threshold: float   
     num_inliers: int
     time_ms: float
