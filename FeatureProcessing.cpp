@@ -65,6 +65,7 @@ cv::Mat stitchTriple(const std::vector<cv::Mat> &imgs,
     all.insert(all.end(), c2.begin(), c2.end());
     all.insert(all.end(), c3.begin(), c3.end());
 
+    // find bounding box of all corners
     float minX = 1e9f, minY = 1e9f, maxX = -1e9f, maxY = -1e9f;
     for (const auto &p : all)
     {
@@ -74,19 +75,23 @@ cv::Mat stitchTriple(const std::vector<cv::Mat> &imgs,
         maxY = std::max(maxY, p.y);
     }
 
+    // Translation to keep minX and minY at (0,0)
     cv::Mat T = (cv::Mat_<double>(3, 3) << 1, 0, -minX, 0, 1, -minY, 0, 0, 1);
     int W = std::max(1, (int)std::ceil(maxX - minX));
     int Hh = std::max(1, (int)std::ceil(maxY - minY));
 
     // Please don't explode
+    // Image size limits
     const int MAX_SIDE = 6000;
     const double MAX_PIXELS = 16e6;
     double s_side = (double)MAX_SIDE / std::max(W, Hh);
     double s_area = std::sqrt(MAX_PIXELS / std::max(1.0, (double)W * (double)Hh));
     double s = std::min(1.0, std::min(s_side, s_area));
 
+    // Scaling matrix
     cv::Mat S = (cv::Mat_<double>(3, 3) << s, 0, 0, 0, s, 0, 0, 0, 1);
     cv::Mat ST = S * T;
+    // Scaled size
     int Ws = std::max(1, (int)std::ceil(W * s));
     int Hs = std::max(1, (int)std::ceil(Hh * s));
 
