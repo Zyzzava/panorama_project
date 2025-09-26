@@ -1,0 +1,13 @@
+type,detector,img_i,img_j,num_inliers,time_ms,threshold
+homography,ORB,1,2,47,29.4353,thr=1
+homography,ORB,1,2,380,25.9071,thr=5
+homography,ORB,1,2,652,25.8937,thr=15
+homography,ORB,2,3,389,34.5835,thr=1
+homography,ORB,2,3,2712,29.8903,thr=5
+homography,ORB,2,3,4375,4.62971,thr=15
+homography,AKAZE,1,2,149,13.4585,thr=1
+homography,AKAZE,1,2,218,13.1467,thr=5
+homography,AKAZE,1,2,240,13.0872,thr=15
+homography,AKAZE,2,3,189,15.0997,thr=1
+homography,AKAZE,2,3,818,6.75642,thr=5
+homography,AKAZE,2,3,1389,1.58425,thr=15
